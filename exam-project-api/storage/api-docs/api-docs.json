@@ -1,0 +1,240 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Gestion des Étudiants",
+        "description": "Documentation de l'API pour la gestion des étudiants et des classes",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/etudiants": {
+            "get": {
+                "tags": [
+                    "Etudiants"
+                ],
+                "summary": "Liste des étudiants",
+                "description": "Affiche une liste des étudiants",
+                "operationId": "getEtudiants",
+                "responses": {
+                    "200": {
+                        "description": "Liste des étudiants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Etudiant"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur lors de la récupération des étudiants"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Etudiants"
+                ],
+                "summary": "Créer un nouvel étudiant",
+                "description": "Enregistre un nouvel étudiant dans la base de données",
+                "operationId": "storeEtudiant",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nom",
+                                    "prenom",
+                                    "date_de_naissance",
+                                    "adresse",
+                                    "classe_id"
+                                ],
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "prenom": {
+                                        "type": "string",
+                                        "maxLength": 150
+                                    },
+                                    "date_de_naissance": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "adresse": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "classe_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Étudiant créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Etudiant"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur lors de la création de l'étudiant"
+                    }
+                }
+            }
+        },
+        "/api/etudiants/classe/{classe_id}": {
+            "get": {
+                "tags": [
+                    "Etudiants"
+                ],
+                "summary": "Liste des étudiants par classe",
+                "description": "Affiche les étudiants d'une classe spécifique",
+                "operationId": "getEtudiantsByClasse",
+                "parameters": [
+                    {
+                        "name": "classe_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des étudiants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Etudiant"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Classe non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la récupération des étudiants"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Classe": {
+                "title": "Classe",
+                "required": [
+                    "nom"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "nom": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Etudiant": {
+                "title": "Etudiant",
+                "required": [
+                    "code",
+                    "nom",
+                    "prenom",
+                    "date_de_naissance",
+                    "adresse",
+                    "classe_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "code": {
+                        "type": "string",
+                        "maxLength": 12
+                    },
+                    "nom": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "prenom": {
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "date_de_naissance": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "adresse": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "classe_id": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Etudiants",
+            "description": "Etudiants"
+        }
+    ]
+}
